@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registre des sondages — été 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* 底面 = 暖白纸 + 国旗蓝/红做背景装饰（页边、表头栏）。
+   类别色是【里面的色】，与底面无关，保持原来那一套。 */
+:root{
+  --papier:#FAF7F1; --surface:#FFFDF9; --surface-2:#F4EFE6;
+  --encre:#17181B; --doux:#5D6067; --faible:#8B8C90; --trait:#E5DED2;
+  --bleu:#0055A4; --rouge:#C8102E;
+  --iv:#1B5E9E; --bar:#2F7A4C; --pop:#BE6510; --the:#8A3A72;
+  --lift:rgba(23,24,27,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --papier:#131211; --surface:#1B1A18; --surface-2:#22211E;
+    --encre:#F0EDE7; --doux:#A0A09D; --faible:#77767A; --trait:#2E2C29;
+    --bleu:#5E9BDD; --rouge:#F0655E;
+    --iv:#6FA9DC; --bar:#69B98A; --pop:#E09A4E; --the:#C77FB0;
+    --lift:rgba(255,255,255,.06);
+  }
+}
+:root[data-theme="dark"]{
+  --papier:#131211; --surface:#1B1A18; --surface-2:#22211E;
+  --encre:#F0EDE7; --doux:#A0A09D; --faible:#77767A; --trait:#2E2C29;
+  --bleu:#5E9BDD; --rouge:#F0655E;
+  --iv:#6FA9DC; --bar:#69B98A; --pop:#E09A4E; --the:#C77FB0;
+  --lift:rgba(255,255,255,.06);
+}
+[data-g="iv"]{--c:var(--iv)} [data-g="bar"]{--c:var(--bar)}
+[data-g="pop"]{--c:var(--pop)} [data-g="the"]{--c:var(--the)}
+
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{
+  margin:0;background:var(--papier);color:var(--encre);
+  font-family:"Libre Franklin","Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  font-size:15.5px;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+/* 底面的三色：页顶一条通栏。等分三段，白的那段就是纸本身。 */
+body::before{
+  content:"";position:fixed;inset:0 0 auto 0;height:5px;z-index:2;
+  background:linear-gradient(to right,
+    var(--bleu) 0 33.34%, var(--papier) 33.34% 66.67%, var(--rouge) 66.67% 100%);
+}
+.page{max-width:1180px;margin:0 auto;padding:48px 26px 80px}
+
+.tete{display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px 34px;
+  padding-bottom:20px;position:relative}
+/* tricolore : trois segments égaux, pas un dégradé */
+.tete::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;
+  background:linear-gradient(to right,
+    var(--bleu) 0 33.34%, var(--surface) 33.34% 66.67%, var(--rouge) 66.67% 100%);
+  border:1px solid var(--trait);border-radius:1px}
+.tete h1{margin:0;font-size:clamp(28px,4vw,42px);font-weight:700;
+  letter-spacing:-.025em;line-height:1.05;text-wrap:balance}
+.tete .sous{margin:8px 0 0;color:var(--doux);font-size:14px;max-width:52ch}
+.tete .astuce{margin:6px 0 0;font-size:13px;color:var(--faible)}
+.tete .astuce b{color:var(--encre);font-weight:600}
+.chiffres{display:flex;gap:24px;margin-left:auto}
+.chiffre b{display:block;font-family:"DM Mono",ui-monospace,monospace;
+  font-size:29px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em}
+.chiffre span{display:block;margin-top:6px;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faible)}
+
+.densite{margin:26px 0 20px}
+.densite h2{margin:0 0 10px;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faible);font-weight:600}
+.bande{display:flex;gap:16px;flex-wrap:wrap}
+.bloc{flex:1 1 230px;min-width:205px}
+.marques{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px;min-height:20px}
+.marque{width:13px;height:20px;border-radius:2px;background:var(--c)}
+.bloc .lab{display:flex;align-items:baseline;gap:9px;
+  border-top:1px solid var(--trait);padding-top:7px}
+.bloc .lab strong{font-size:15px;font-weight:600}
+.bloc .lab em{font-style:normal;font-family:"DM Mono",monospace;font-size:12px;
+  color:var(--faible);font-variant-numeric:tabular-nums;margin-left:auto}
+
+.legende{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
+.cle{display:inline-flex;align-items:center;gap:8px;font-size:13px;
+  padding:4px 12px 4px 9px;border:1px solid var(--trait);border-radius:3px;
+  background:var(--surface)}
+.cle i{width:9px;height:9px;border-radius:2px;background:var(--c);flex:none}
+.cle b{font-family:"DM Mono",monospace;font-size:11px;font-weight:500;
+  color:var(--c);letter-spacing:.04em;margin-right:2px}
+.cle-zh{color:var(--doux);font-size:12.5px}
+.cle u{text-decoration:none;font-family:"DM Mono",monospace;font-size:11.5px;
+  color:var(--faible);font-variant-numeric:tabular-nums;
+  padding-left:8px;border-left:1px solid var(--trait)}
+
+.arbre{position:relative;padding-left:22px}
+.arbre::before{content:"";position:absolute;left:0;top:16px;bottom:16px;
+  width:2px;background:var(--trait)}
+.maison{position:relative;padding:18px 0 20px 26px;border-bottom:1px solid var(--trait)}
+.maison:last-child{border-bottom:0}
+.maison::before{content:"";position:absolute;left:-22px;top:33px;width:22px;height:2px;
+  background:var(--trait)}
+.maison::after{content:"";position:absolute;left:-5px;top:29px;width:10px;height:10px;
+  border-radius:50%;background:var(--papier);border:2px solid var(--doux)}
+.maison-tete{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.maison-nom{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.maison-n{font-family:"DM Mono",monospace;font-size:11.5px;color:var(--faible);
+  font-variant-numeric:tabular-nums}
+.maison-note{margin-left:auto;font-size:12.5px;color:var(--faible)}
+
+.mois-rangee{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:800px){.mois-rangee{grid-template-columns:1fr}}
+.mois{border:1px solid var(--trait);border-radius:4px;padding:10px 11px 11px;
+  background:var(--surface)}
+.mois.vide{background:transparent;border-style:dashed;opacity:.55}
+.mois-etiq{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faible);font-weight:600}
+.mois-etiq b{margin-left:auto;font-family:"DM Mono",monospace;font-size:11.5px;
+  letter-spacing:0;font-weight:500;font-variant-numeric:tabular-nums}
+.fiches{display:flex;flex-direction:column;gap:4px}
+
+.fiche{
+  position:relative;border-radius:3px;border-left:3px solid var(--c);
+  background:var(--surface-2);
+}
+a.ouvre{
+  display:grid;grid-template-columns:auto 1fr;grid-template-areas:"no txt" "no meta";
+  gap:2px 9px;align-items:baseline;padding:7px 52px 7px 8px;border-radius:3px;
+  color:inherit;text-decoration:none;transition:background .12s;
+}
+a.ouvre:hover{background:var(--lift)}
+a.ouvre:hover .fr{text-decoration:underline;text-underline-offset:2px}
+a.ouvre:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+/* 代号 + 编号。代号是【冗余编码】：看不出颜色时照样分得清类别。 */
+.fiche .no{grid-area:no;font-family:"DM Mono",monospace;font-size:11px;
+  color:var(--faible);font-variant-numeric:tabular-nums;
+  display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.25}
+.fiche .no b{font-weight:500;color:var(--c);letter-spacing:.05em;font-size:11.5px}
+.fiche .txt{grid-area:txt;min-width:0}
+.fiche .fr{display:block;font-size:14px;font-weight:500;line-height:1.32}
+.fiche .zh{display:block;font-size:12px;color:var(--doux);margin-top:1px}
+.fiche .media{display:block;font-size:11px;color:var(--faible);margin-top:3px}
+.fiche .meta{grid-area:meta;font-family:"DM Mono",monospace;font-size:10.5px;
+  color:var(--faible);margin-top:3px;font-variant-numeric:tabular-nums}
+a.src{
+  position:absolute;top:6px;right:7px;font-size:10px;letter-spacing:.05em;
+  text-transform:uppercase;font-weight:600;color:var(--faible);
+  text-decoration:none;padding:2px 6px;border:1px solid var(--trait);
+  border-radius:3px;background:var(--surface);transition:color .12s,border-color .12s;
+}
+a.src::after{content:" ↗";font-weight:400}
+a.src:hover{color:var(--c);border-color:var(--c)}
+a.src:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.rien{margin:0;font-size:12.5px;color:var(--faible);font-style:italic}
+
+.pied{margin-top:36px;padding-top:18px;border-top:1px solid var(--trait);
+  display:flex;flex-wrap:wrap;gap:20px;font-size:12.5px;color:var(--faible)}
+.pied p{margin:0;max-width:58ch}
+.pied b{color:var(--doux);font-weight:600}
+@media(prefers-reduced-motion:reduce){a.fiche{transition:none}
+  a.fiche:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="tete">
+    <div>
+      <h1>Registre des sondages</h1>
+      <p class="sous">Notices déposées à la Commission des sondages — présidentielle 2027, juin à août 2026.</p>
+      <p class="astuce"><b>Cliquez le titre</b> pour ouvrir le PDF de ce dossier —
+        <b>source&nbsp;↗</b> ouvre la notice officielle en ligne, même sans les fichiers.</p>
+    </div>
+    <div class="chiffres">
+      <div class="chiffre"><b>47</b><span>notices</span></div>
+      <div class="chiffre"><b>1009</b><span>pages</span></div>
+      <div class="chiffre"><b>10</b><span>instituts</span></div>
+      <div class="chiffre"><b>36</b><span>Mo</span></div>
+    </div>
+  </header>
+
+  <section class="densite">
+    <h2>Dépôts par mois</h2>
+    <div class="bande">
+      <div class="bloc"><div class="marques"><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="pop"></span><span class="marque" data-g="the"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="the"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="the"></span><span class="marque" data-g="the"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="the"></span><span class="marque" data-g="the"></span><span class="marque" data-g="bar"></span></div>
+        <div class="lab"><strong>Juin</strong><em>18 notices · 340 p</em></div></div>
+      <div class="bloc"><div class="marques"><span class="marque" data-g="bar"></span><span class="marque" data-g="pop"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="the"></span><span class="marque" data-g="the"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="the"></span><span class="marque" data-g="the"></span><span class="marque" data-g="the"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="pop"></span><span class="marque" data-g="bar"></span></div>
+        <div class="lab"><strong>Juillet</strong><em>18 notices · 371 p</em></div></div>
+      <div class="bloc"><div class="marques"><span class="marque" data-g="iv"></span><span class="marque" data-g="bar"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="pop"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="the"></span><span class="marque" data-g="iv"></span><span class="marque" data-g="bar"></span></div>
+        <div class="lab"><strong>Août</strong><em>8 notices · 219 p</em></div></div>
+    </div>
+  </section>
+
+  <div class="legende"><span class="cle" data-g="iv"><i></i><b>IV</b>Intentions de vote <span class="cle-zh">投票意向</span><u>13</u></span><span class="cle" data-g="bar"><i></i><b>BP</b>Baromètre politique <span class="cle-zh">政治信心晴雨表</span><u>18</u></span><span class="cle" data-g="pop"><i></i><b>IP</b>Indices de popularité <span class="cle-zh">人气排名</span><u>4</u></span><span class="cle" data-g="the"><i></i><b>ET</b>Enquête thématique <span class="cle-zh">专题调查</span><u>12</u></span></div>
+
+  <div class="arbre">
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Ifop</span><span class="maison-n">3 fiches · 44 p</span><span class="maison-note">Ifop-Fiducial</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>2</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./Ifop/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B46%E6%9C%88%2010210-Pres-seconds-tours-IFOP-Marianne-24-juin.pdf" title="总统选举投票意向 - 2026年6月 10210-Pres-seconds-tours-IFOP-Marianne-24-juin.pdf">
+    <span class="no"><b>IV</b>10210</span>
+    <span class="txt">
+      <span class="fr">Seconds tours</span>
+      <span class="zh">二轮对决</span>
+      <span class="media">Marianne</span>
+    </span>
+    <span class="meta">7 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2215" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="iv">
+  <a class="ouvre" href="./Ifop/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B46%E6%9C%88%2010211-Pres-IV-IFOP-Le-Figaro-25-juin.pdf" title="总统选举投票意向 - 2026年6月 10211-Pres-IV-IFOP-Le-Figaro-25-juin.pdf">
+    <span class="no"><b>IV</b>10211</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote</span>
+      <span class="zh">首轮投票意向</span>
+      <span class="media">Le Figaro</span>
+    </span>
+    <span class="meta">16 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2216" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois vide"><div class="mois-etiq">Juillet<b>—</b></div><p class="rien">aucun dépôt</p></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./Ifop/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B48%E6%9C%88%2010242-Pres-Barometre-election-pres-IV-V5-IFOP-26-aout.pdf" title="总统选举投票意向 - 2026年8月 10242-Pres-Barometre-election-pres-IV-V5-IFOP-26-aout.pdf">
+    <span class="no"><b>IV</b>10242</span>
+    <span class="txt">
+      <span class="fr">Baromètre de l&#x27;élection présidentielle, vague 5</span>
+      <span class="zh">大选晴雨表 第 5 波</span>
+      <span class="media">LCI · Le Figaro · Sud Radio</span>
+    </span>
+    <span class="meta">21 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2250" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Cluster17</span><span class="maison-n">4 fiches · 107 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./cluster17/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010203-Pres-Barometre-CLUSTER17-Le-Point-11-Juin.pdf" title="政治信心晴雨表 - 2026年6月 10203-Pres-Barometre-CLUSTER17-Le-Point-11-Juin.pdf">
+    <span class="no"><b>BP</b>10203</span>
+    <span class="txt">
+      <span class="fr">Baromètre</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Point</span>
+    </span>
+    <span class="meta">16 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2204" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./cluster17/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010228-Pres-Barometre-Cluster17-Le-Point-14-juillet.pdf" title="政治信心晴雨表 - 2026年7月 10228-Pres-Barometre-Cluster17-Le-Point-14-juillet.pdf">
+    <span class="no"><b>BP</b>10228</span>
+    <span class="txt">
+      <span class="fr">Baromètre</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Point</span>
+    </span>
+    <span class="meta">23 p · 0.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2233" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>2</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./cluster17/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B48%E6%9C%88%2010237-Pres-Barometre-Cluster17-Le-Point-Aout.pdf" title="政治信心晴雨表 - 2026年8月 10237-Pres-Barometre-Cluster17-Le-Point-Aout.pdf">
+    <span class="no"><b>BP</b>10237</span>
+    <span class="txt">
+      <span class="fr">Baromètre</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Point</span>
+    </span>
+    <span class="meta">42 p · 0.9 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2246" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="iv">
+  <a class="ouvre" href="./cluster17/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B48%E6%9C%88%2010246-Pres-CLUSTER17-Le-grand-continent-31-aout.pdf" title="总统选举投票意向 - 2026年8月 10246-Pres-CLUSTER17-Le-grand-continent-31-aout.pdf">
+    <span class="no"><b>IV</b>10246</span>
+    <span class="txt">
+      <span class="fr">Sondage sur l&#x27;élection présidentielle de 2027</span>
+      <span class="zh">2027 大选首轮意向</span>
+      <span class="media">Le Grand Continent</span>
+    </span>
+    <span class="meta">26 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2256" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois vide"><div class="mois-etiq">Septembre<b>—</b></div><p class="rien">aucun dépôt</p></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">CSA</span><span class="maison-n">3 fiches · 27 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>1</b></div><div class="fiches"><div class="fiche" data-g="pop">
+  <a class="ouvre" href="./csa/%E4%BA%BA%E6%B0%94%E6%8E%92%E5%90%8D%20-%202026%E5%B9%B46%E6%9C%88%2010212-Pres-Indices-popularite-CSA-JDD-27-juin.pdf" title="人气排名 - 2026年6月 10212-Pres-Indices-popularite-CSA-JDD-27-juin.pdf">
+    <span class="no"><b>IP</b>10212</span>
+    <span class="txt">
+      <span class="fr">Indices de popularité</span>
+      <span class="zh">人气指数</span>
+      <span class="media">JDD</span>
+    </span>
+    <span class="meta">9 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2219" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>1</b></div><div class="fiches"><div class="fiche" data-g="pop">
+  <a class="ouvre" href="./csa/%E4%BA%BA%E6%B0%94%E6%8E%92%E5%90%8D%20-%202026%E5%B9%B47%E6%9C%88%2010234-Pres-Indices-popularite-CSA-JDD-25-juillet.pdf" title="人气排名 - 2026年7月 10234-Pres-Indices-popularite-CSA-JDD-25-juillet.pdf">
+    <span class="no"><b>IP</b>10234</span>
+    <span class="txt">
+      <span class="fr">Indices de popularité</span>
+      <span class="zh">人气指数</span>
+      <span class="media">JDD</span>
+    </span>
+    <span class="meta">9 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2242" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="pop">
+  <a class="ouvre" href="./csa/%E4%BA%BA%E6%B0%94%E6%8E%92%E5%90%8D%20-%202026%E5%B9%B48%E6%9C%88%2010244-Pres-Indices-popularite-executif-CSA-JDD-29-aout.pdf" title="人气排名 - 2026年8月 10244-Pres-Indices-popularite-executif-CSA-JDD-29-aout.pdf">
+    <span class="no"><b>IP</b>10244</span>
+    <span class="txt">
+      <span class="fr">Indices de popularité de l&#x27;exécutif</span>
+      <span class="zh">行政首长人气指数</span>
+      <span class="media">JDD</span>
+    </span>
+    <span class="meta">9 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2254" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Elabe</span><span class="maison-n">8 fiches · 53 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>2</b></div><div class="fiches"><div class="fiche" data-g="the">
+  <a class="ouvre" href="./elabe/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010197-Pres-Violences-post-victoire-PSG-ELABE-3-juin.pdf" title="专题调查 - 2026年6月 10197-Pres-Violences-post-victoire-PSG-ELABE-3-juin.pdf">
+    <span class="no"><b>ET</b>10197</span>
+    <span class="txt">
+      <span class="fr">Violences après la victoire du PSG</span>
+      <span class="zh">PSG 夺冠后的骚乱</span>
+    </span>
+    <span class="meta">8 p · 0.4 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2199" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./elabe/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010198-Pres-Observatoire-ELABE-4-juin.pdf" title="政治信心晴雨表 - 2026年6月 10198-Pres-Observatoire-ELABE-4-juin.pdf">
+    <span class="no"><b>BP</b>10198</span>
+    <span class="txt">
+      <span class="fr">Observatoire politique</span>
+      <span class="zh">政治观察</span>
+    </span>
+    <span class="meta">6 p · 0.9 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2200" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>4</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./elabe/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010216-Pres-Observatoire-politique-ELABE-2-juillet.pdf" title="政治信心晴雨表 - 2026年7月 10216-Pres-Observatoire-politique-ELABE-2-juillet.pdf">
+    <span class="no"><b>BP</b>10216</span>
+    <span class="txt">
+      <span class="fr">Observatoire politique</span>
+      <span class="zh">政治观察</span>
+    </span>
+    <span class="meta">5 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2221" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./elabe/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B47%E6%9C%88%2010221-Pres-Les-Francais-et-la-condamnation-MLP-en-appel-EL.pdf" title="专题调查 - 2026年7月 10221-Pres-Les-Francais-et-la-condamnation-MLP-en-appel-EL.pdf">
+    <span class="no"><b>ET</b>10221</span>
+    <span class="txt">
+      <span class="fr">Les Français et la condamnation de M. Le Pen en appel</span>
+      <span class="zh">对 Le Pen 上诉判决的看法</span>
+    </span>
+    <span class="meta">6 p · 0.4 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2226" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./elabe/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B47%E6%9C%88%2010226-Pres-ELABE-11-juillet.pdf" title="专题调查 - 2026年7月 10226-Pres-ELABE-11-juillet.pdf">
+    <span class="no"><b>ET</b>10226</span>
+    <span class="txt">
+      <span class="fr">Enquête du 11 juillet</span>
+      <span class="zh">7 月 11 日专题</span>
+    </span>
+    <span class="meta">9 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2231" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./elabe/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010235-Pres-Observatoire-politique-ELABE-30-juillet.pdf" title="政治信心晴雨表 - 2026年7月 10235-Pres-Observatoire-politique-ELABE-30-juillet.pdf">
+    <span class="no"><b>BP</b>10235</span>
+    <span class="txt">
+      <span class="fr">Observatoire politique</span>
+      <span class="zh">政治观察</span>
+    </span>
+    <span class="meta">5 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2245" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./elabe/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B48%E6%9C%88%2010245-Pres-IV-ELABE-29-aout.pdf" title="总统选举投票意向 - 2026年8月 10245-Pres-IV-ELABE-29-aout.pdf">
+    <span class="no"><b>IV</b>10245</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote, second tour</span>
+      <span class="zh">二轮意向 Attal / Le Pen</span>
+      <span class="media">BFMTV · La Tribune Dimanche</span>
+    </span>
+    <span class="meta">9 p · 0.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2253" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Septembre<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./elabe/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B49%E6%9C%88%2010247-Pres-Observatoire-politique-ELABE-3-septembre.pdf" title="政治信心晴雨表 - 2026年9月 10247-Pres-Observatoire-politique-ELABE-3-septembre.pdf">
+    <span class="no"><b>BP</b>10247</span>
+    <span class="txt">
+      <span class="fr">Observatoire politique</span>
+      <span class="zh">政治观察</span>
+      <span class="media">Les Echos</span>
+    </span>
+    <span class="meta">5 p · 0.3 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2260" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Ipsos</span><span class="maison-n">3 fiches · 101 p</span><span class="maison-note">Ipsos BVA</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>2</b></div><div class="fiches"><div class="fiche" data-g="the">
+  <a class="ouvre" href="./ipsos/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010195-Pres-IPSOS-BVA-Le-Parisien-1er-juin.pdf" title="专题调查 - 2026年6月 10195-Pres-IPSOS-BVA-Le-Parisien-1er-juin.pdf">
+    <span class="no"><b>ET</b>10195</span>
+    <span class="txt">
+      <span class="fr">Enquête du 1er juin</span>
+      <span class="zh">6 月 1 日专题</span>
+      <span class="media">Le Parisien</span>
+    </span>
+    <span class="meta">22 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2197" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./ipsos/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010204-Pres-Barometre-politique-IPSOS-BVA-La-Tribune-dimanc.pdf" title="政治信心晴雨表 - 2026年6月 10204-Pres-Barometre-politique-IPSOS-BVA-La-Tribune-dimanc.pdf">
+    <span class="no"><b>BP</b>10204</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">La Tribune Dimanche</span>
+    </span>
+    <span class="meta">46 p · 2.2 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2206" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./ipsos/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010231-Pres-Barometre-politique-IPSOS-BVA-La-Tribune-dimanc.pdf" title="政治信心晴雨表 - 2026年7月 10231-Pres-Barometre-politique-IPSOS-BVA-La-Tribune-dimanc.pdf">
+    <span class="no"><b>BP</b>10231</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">La Tribune Dimanche</span>
+    </span>
+    <span class="meta">33 p · 2.1 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2236" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois vide"><div class="mois-etiq">Août<b>—</b></div><p class="rien">aucun dépôt</p></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Odoxa</span><span class="maison-n">7 fiches · 34 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>3</b></div><div class="fiches"><div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010200-Pres-Bon-president-en-cas-de-guerre-ODOXA-11-juin.pdf" title="专题调查 - 2026年6月 10200-Pres-Bon-president-en-cas-de-guerre-ODOXA-11-juin.pdf">
+    <span class="no"><b>ET</b>10200</span>
+    <span class="txt">
+      <span class="fr">Bon président en cas de guerre</span>
+      <span class="zh">战时谁是好总统</span>
+    </span>
+    <span class="meta">4 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2202" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010208-Pres-B-Retailleau-ODOXA-19-juin.pdf" title="专题调查 - 2026年6月 10208-Pres-B-Retailleau-ODOXA-19-juin.pdf">
+    <span class="no"><b>ET</b>10208</span>
+    <span class="txt">
+      <span class="fr">Bruno Retailleau</span>
+      <span class="zh">人物专题</span>
+    </span>
+    <span class="meta">5 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2213" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./odoxa/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010215-Pres-Barometre-ODOXA-30-juin.pdf" title="政治信心晴雨表 - 2026年6月 10215-Pres-Barometre-ODOXA-30-juin.pdf">
+    <span class="no"><b>BP</b>10215</span>
+    <span class="txt">
+      <span class="fr">Baromètre</span>
+      <span class="zh">政治信心晴雨表</span>
+    </span>
+    <span class="meta">6 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2220" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>3</b></div><div class="fiches"><div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B47%E6%9C%88%2010219-Pres-Les-Francais-et-E-Philippe-ODOXA-3-juillet.pdf" title="专题调查 - 2026年7月 10219-Pres-Les-Francais-et-E-Philippe-ODOXA-3-juillet.pdf">
+    <span class="no"><b>ET</b>10219</span>
+    <span class="txt">
+      <span class="fr">Les Français et Édouard Philippe</span>
+      <span class="zh">对 Philippe 的看法</span>
+    </span>
+    <span class="meta">5 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2223" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B47%E6%9C%88%2010220-Pres-candidature-MLP-ODOXA-8-juillet.pdf" title="专题调查 - 2026年7月 10220-Pres-candidature-MLP-ODOXA-8-juillet.pdf">
+    <span class="no"><b>ET</b>10220</span>
+    <span class="txt">
+      <span class="fr">Candidature de M. Le Pen</span>
+      <span class="zh">Le Pen 参选</span>
+    </span>
+    <span class="meta">5 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2225" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B47%E6%9C%88%2010230-Pres-ODOXA-16-juillet.pdf" title="专题调查 - 2026年7月 10230-Pres-ODOXA-16-juillet.pdf">
+    <span class="no"><b>ET</b>10230</span>
+    <span class="txt">
+      <span class="fr">Enquête du 16 juillet</span>
+      <span class="zh">7 月 16 日专题</span>
+    </span>
+    <span class="meta">5 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2235" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="the">
+  <a class="ouvre" href="./odoxa/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B48%E6%9C%88%2010243-Pres-politique-economique-des-candidats-ODOXA-27-aou.pdf" title="专题调查 - 2026年8月 10243-Pres-politique-economique-des-candidats-ODOXA-27-aou.pdf">
+    <span class="no"><b>ET</b>10243</span>
+    <span class="txt">
+      <span class="fr">Politique économique des candidats</span>
+      <span class="zh">候选人的经济政策</span>
+      <span class="media">Backbone · Le Figaro</span>
+    </span>
+    <span class="meta">4 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2251" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">OpinionWay</span><span class="maison-n">3 fiches · 66 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>1</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./opinionway/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B46%E6%9C%88%2010205-Pres-IV-OPINIONWAY-JDD-13-juin.pdf" title="总统选举投票意向 - 2026年6月 10205-Pres-IV-OPINIONWAY-JDD-13-juin.pdf">
+    <span class="no"><b>IV</b>10205</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote</span>
+      <span class="zh">投票意向</span>
+      <span class="media">JDD</span>
+    </span>
+    <span class="meta">15 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2210" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>2</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./opinionway/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B47%E6%9C%88%2010218-Pres-election-2027-OPINIONWAY-Le-Figaro-3-juillet.pdf" title="总统选举投票意向 - 2026年7月 10218-Pres-election-2027-OPINIONWAY-Le-Figaro-3-juillet.pdf">
+    <span class="no"><b>IV</b>10218</span>
+    <span class="txt">
+      <span class="fr">Élection 2027</span>
+      <span class="zh">2027 大选</span>
+      <span class="media">Le Figaro</span>
+    </span>
+    <span class="meta">28 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2222" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="iv">
+  <a class="ouvre" href="./opinionway/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B47%E6%9C%88%2010224-Pres-Presitrack-OPINIONWAY-Les-Echos-9-juillet.pdf" title="总统选举投票意向 - 2026年7月 10224-Pres-Presitrack-OPINIONWAY-Les-Echos-9-juillet.pdf">
+    <span class="no"><b>IV</b>10224</span>
+    <span class="txt">
+      <span class="fr">Presitrack</span>
+      <span class="zh">滚动追踪</span>
+      <span class="media">Les Échos</span>
+    </span>
+    <span class="meta">23 p · 0.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2229" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois vide"><div class="mois-etiq">Août<b>—</b></div><p class="rien">aucun dépôt</p></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Toluna</span><span class="maison-n">4 fiches · 203 p</span><span class="maison-note">Toluna Harris Interactive</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>1</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./toluna/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B46%E6%9C%88%2010214-Pres-Barometre-confiance-politique-TOLUNA-HARRIS-INT.pdf" title="总统选举投票意向 - 2026年6月 10214-Pres-Barometre-confiance-politique-TOLUNA-HARRIS-INT.pdf">
+    <span class="no"><b>IV</b>10214</span>
+    <span class="txt">
+      <span class="fr">Baromètre de confiance politique</span>
+      <span class="zh">政治信任晴雨表</span>
+    </span>
+    <span class="meta">34 p · 2.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2218" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>2</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./toluna/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B47%E6%9C%88%2010223-pres-iv-toluna-harris-interactive-rtl-8-juillet.pdf" title="总统选举投票意向 - 2026年7月 10223-pres-iv-toluna-harris-interactive-rtl-8-juillet.pdf">
+    <span class="no"><b>IV</b>10223</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote</span>
+      <span class="zh">投票意向</span>
+      <span class="media">RTL</span>
+    </span>
+    <span class="meta">64 p · 1.3 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2228" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="iv">
+  <a class="ouvre" href="./toluna/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B47%E6%9C%88%2010236-Pres-Barometre-TOLUNA-HARRIS-INTERACTIVE-LCI-31-juil.pdf" title="总统选举投票意向 - 2026年7月 10236-Pres-Barometre-TOLUNA-HARRIS-INTERACTIVE-LCI-31-juil.pdf">
+    <span class="no"><b>IV</b>10236</span>
+    <span class="txt">
+      <span class="fr">Baromètre</span>
+      <span class="zh">晴雨表</span>
+      <span class="media">LCI</span>
+    </span>
+    <span class="meta">34 p · 2.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2244" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./toluna/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B48%E6%9C%88%2010239-Pres-TOLUNA-HARRIS-INTERACTIVE-RTL-24-aout.pdf" title="总统选举投票意向 - 2026年8月 10239-Pres-TOLUNA-HARRIS-INTERACTIVE-RTL-24-aout.pdf">
+    <span class="no"><b>IV</b>10239</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote à la présidentielle 2027</span>
+      <span class="zh">2027 首轮投票意向</span>
+      <span class="media">M6 · RTL</span>
+    </span>
+    <span class="meta">71 p · 1.3 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2248" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">Verian</span><span class="maison-n">8 fiches · 226 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>4</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./verian/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010196-Pres-Barometre-politique-VERIAN-Figaro-Magazine-3-ju.pdf" title="政治信心晴雨表 - 2026年6月 10196-Pres-Barometre-politique-VERIAN-Figaro-Magazine-3-ju.pdf">
+    <span class="no"><b>BP</b>10196</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Figaro Magazine</span>
+    </span>
+    <span class="meta">37 p · 0.9 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2198" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./verian/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010202-Pres-Barometre-vague-3-VERIAN-Le-Figaro-Mag-12-juin.pdf" title="政治信心晴雨表 - 2026年6月 10202-Pres-Barometre-vague-3-VERIAN-Le-Figaro-Mag-12-juin.pdf">
+    <span class="no"><b>BP</b>10202</span>
+    <span class="txt">
+      <span class="fr">Baromètre stature, vague 3</span>
+      <span class="zh">形象晴雨表 第 3 波</span>
+      <span class="media">Le Figaro Magazine</span>
+    </span>
+    <span class="meta">35 p · 0.9 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2203" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./verian/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010206-Pres-Vacances-VERIAN-Lhemicycle-18-juin.pdf" title="专题调查 - 2026年6月 10206-Pres-Vacances-VERIAN-Lhemicycle-18-juin.pdf">
+    <span class="no"><b>ET</b>10206</span>
+    <span class="txt">
+      <span class="fr">Les vacances</span>
+      <span class="zh">假期</span>
+      <span class="media">L&#x27;Hémicycle</span>
+    </span>
+    <span class="meta">13 p · 0.5 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2211" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="the">
+  <a class="ouvre" href="./verian/%E4%B8%93%E9%A2%98%E8%B0%83%E6%9F%A5%20-%202026%E5%B9%B46%E6%9C%88%2010213-Pres-Les-Francais-et-les-elites-VERIAN-Lhemicycle-26.pdf" title="专题调查 - 2026年6月 10213-Pres-Les-Francais-et-les-elites-VERIAN-Lhemicycle-26.pdf">
+    <span class="no"><b>ET</b>10213</span>
+    <span class="txt">
+      <span class="fr">Les Français et les élites</span>
+      <span class="zh">民众与精英</span>
+      <span class="media">L&#x27;Hémicycle</span>
+    </span>
+    <span class="meta">26 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2217" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>3</b></div><div class="fiches"><div class="fiche" data-g="iv">
+  <a class="ouvre" href="./verian/%E6%80%BB%E7%BB%9F%E9%80%89%E4%B8%BE%E6%8A%95%E7%A5%A8%E6%84%8F%E5%90%91%20-%202026%E5%B9%B47%E6%9C%88%2010225-pres-iv-1er-tour-verian-lhemicycle-10-juillet.pdf" title="总统选举投票意向 - 2026年7月 10225-pres-iv-1er-tour-verian-lhemicycle-10-juillet.pdf">
+    <span class="no"><b>IV</b>10225</span>
+    <span class="txt">
+      <span class="fr">Intentions de vote, premier tour</span>
+      <span class="zh">首轮投票意向</span>
+      <span class="media">L&#x27;Hémicycle</span>
+    </span>
+    <span class="meta">22 p · 0.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2230" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="bar">
+  <a class="ouvre" href="./verian/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010229-Pres-Barometre-politique-VERIAN-Figaro-mag-16-juille.pdf" title="政治信心晴雨表 - 2026年7月 10229-Pres-Barometre-politique-VERIAN-Figaro-mag-16-juille.pdf">
+    <span class="no"><b>BP</b>10229</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Figaro Magazine</span>
+    </span>
+    <span class="meta">22 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2234" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div>
+<div class="fiche" data-g="pop">
+  <a class="ouvre" href="./verian/%E4%BA%BA%E6%B0%94%E6%8E%92%E5%90%8D%20-%202026%E5%B9%B47%E6%9C%88%2010233-Pres-Barometre-stature-vague-4-VERIAN-Le-Figaro-Maga.pdf" title="人气排名 - 2026年7月 10233-Pres-Barometre-stature-vague-4-VERIAN-Le-Figaro-Maga.pdf">
+    <span class="no"><b>IP</b>10233</span>
+    <span class="txt">
+      <span class="fr">Baromètre stature, vague 4</span>
+      <span class="zh">形象晴雨表 第 4 波</span>
+      <span class="media">Le Figaro Magazine</span>
+    </span>
+    <span class="meta">34 p · 0.8 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2241" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois vide"><div class="mois-etiq">Août<b>—</b></div><p class="rien">aucun dépôt</p></div>
+<div class="mois"><div class="mois-etiq">Septembre<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./verian/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B49%E6%9C%88%2010248-Pres-Barometre-politique-VERIAN-3-septembre.pdf" title="政治信心晴雨表 - 2026年9月 10248-Pres-Barometre-politique-VERIAN-3-septembre.pdf">
+    <span class="no"><b>BP</b>10248</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">Le Figaro Magazine</span>
+    </span>
+    <span class="meta">37 p · 2.4 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2261" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+<section class="maison">
+  <div class="maison-tete"><span class="maison-nom">YouGov</span><span class="maison-n">4 fiches · 148 p</span></div>
+  <div class="mois-rangee"><div class="mois"><div class="mois-etiq">Juin<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./yougov/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B46%E6%9C%88%2010199-Pres-Barometre-politique-YOUGOV-Huffpost-7-juin.pdf" title="政治信心晴雨表 - 2026年6月 10199-Pres-Barometre-politique-YOUGOV-Huffpost-7-juin.pdf">
+    <span class="no"><b>BP</b>10199</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">HuffPost</span>
+    </span>
+    <span class="meta">35 p · 0.6 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2201" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Juillet<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./yougov/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B47%E6%9C%88%2010217-Pres-Barometre-politique-YOUGOV-Huffpost-3-juillet.pdf" title="政治信心晴雨表 - 2026年7月 10217-Pres-Barometre-politique-YOUGOV-Huffpost-3-juillet.pdf">
+    <span class="no"><b>BP</b>10217</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">HuffPost</span>
+    </span>
+    <span class="meta">39 p · 0.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2224" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Août<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./yougov/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B48%E6%9C%88%2010238-Pres-Barometre-politique-YOUGOV-Huffpost-8-aout.pdf" title="政治信心晴雨表 - 2026年8月 10238-Pres-Barometre-politique-YOUGOV-Huffpost-8-aout.pdf">
+    <span class="no"><b>BP</b>10238</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">HuffPost</span>
+    </span>
+    <span class="meta">37 p · 0.7 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2247" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div>
+<div class="mois"><div class="mois-etiq">Septembre<b>1</b></div><div class="fiches"><div class="fiche" data-g="bar">
+  <a class="ouvre" href="./yougov/%E6%94%BF%E6%B2%BB%E4%BF%A1%E5%BF%83%E6%99%B4%E9%9B%A8%E8%A1%A8%20-%202026%E5%B9%B49%E6%9C%88%2010249-Pres-Barometre-politique-YOUGOV-Le-Huffpost-4-septem.pdf" title="政治信心晴雨表 - 2026年9月 10249-Pres-Barometre-politique-YOUGOV-Le-Huffpost-4-septem.pdf">
+    <span class="no"><b>BP</b>10249</span>
+    <span class="txt">
+      <span class="fr">Baromètre politique</span>
+      <span class="zh">政治信心晴雨表</span>
+      <span class="media">HuffPost</span>
+    </span>
+    <span class="meta">37 p · 0.8 Mo</span>
+  </a>
+  <a class="src" href="https://www.commission-des-sondages.fr/notices/medias/fichiers/add/2259" target="_blank" rel="noopener" title="Ouvrir la notice officielle en ligne (fonctionne sans les fichiers locaux)">source</a>
+</div></div></div></div>
+</section>
+  </div>
+
+  <footer class="pied">
+    <p><b>Source</b> — commission-des-sondages.fr, notices n° 10195 à 10245. Le genre de
+      chaque enquête est établi d'après la page de garde du document, non d'après son titre.</p>
+    <p><b>Note</b> — la notice 10202 s'intitule « baromètre vague 3 » mais contient le
+      baromètre <em>stature</em> ; elle est classée ici d'après son contenu.</p>
+    <p><b>Août</b> — Ipsos, OpinionWay et Verian n'ont déposé aucune notice ce mois-là :
+      vérifié auprès du registre et de leurs propres sites.</p>
+  </footer>
+</div>
+</body>
+</html>
